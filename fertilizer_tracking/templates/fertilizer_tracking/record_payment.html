@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <h2>Record UCF Payment/Receipt</h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label for="{{ form.date.id_for_label }}" class="form-label">Date</label>
+                {{ form.date }}
+                {% if form.date.errors %}
+                <div class="text-danger">
+                    {% for error in form.date.errors %}
+                    <small>{{ error }}</small>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="mb-3">
+                <label for="{{ form.payment_type.id_for_label }}" class="form-label">Transaction Type</label>
+                {{ form.payment_type }}
+                {% if form.payment_type.errors %}
+                <div class="text-danger">
+                    {% for error in form.payment_type.errors %}
+                    <small>{{ error }}</small>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="mb-3">
+                <label for="{{ form.amount.id_for_label }}" class="form-label">Amount (K)</label>
+                {{ form.amount }}
+                {% if form.amount.errors %}
+                <div class="text-danger">
+                    {% for error in form.amount.errors %}
+                    <small>{{ error }}</small>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="mb-3">
+                <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                <div class="text-danger">
+                    {% for error in form.description.errors %}
+                    <small>{{ error }}</small>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="mb-3">
+                <label for="{{ form.reference_number.id_for_label }}" class="form-label">Reference Number (Optional)</label>
+                {{ form.reference_number }}
+                {% if form.reference_number.errors %}
+                <div class="text-danger">
+                    {% for error in form.reference_number.errors %}
+                    <small>{{ error }}</small>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Record Transaction</button>
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Add Bootstrap classes to form fields
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputs = document.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            if (input.type !== 'checkbox') {
+                input.classList.add('form-control');
+            }
+        });
+    });
+</script>
+{% endblock %}
