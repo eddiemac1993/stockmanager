@@ -7,31 +7,23 @@
         <h2>Dashboard - {{ today }}</h2>
         
         <div class="row mt-4">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="card text-white bg-primary">
                     <div class="card-body">
-                        <h5 class="card-title">Today's Sales</h5>
-                        <h3>K{{ total_today_sales|floatformat:2|intcomma }}</h3>
+                        <h5 class="card-title">Overall Sales</h5>
+                        <h3>K{{ total_overall_sales|floatformat:2|intcomma }}</h3>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="card text-white bg-success">
                     <div class="card-body">
-                        <h5 class="card-title">Today's Commission</h5>
-                        <h3>K{{ total_today_commissions|floatformat:2|intcomma }}</h3>
+                        <h5 class="card-title">Overall Commission</h5>
+                        <h3>K{{ total_overall_commissions|floatformat:2|intcomma }}</h3>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card text-white bg-info">
-                    <div class="card-body">
-                        <h5 class="card-title">Opening Balance</h5>
-                        <h3>K{{ opening_balance|floatformat:2|intcomma }}</h3>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="card text-white bg-warning">
                     <div class="card-body">
                         <h5 class="card-title">Total Stock Value</h5>
@@ -106,47 +98,45 @@
                         {% endfor %}
                     </tbody>
                 </table>
+                
+                <h4 class="mt-4">Recent Stock Changes</h4>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Depot</th>
+                            <th>Product</th>
+                            <th>Change</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for change in recent_stock_changes %}
+                        <tr>
+                            <td>{{ change.date }}</td>
+                            <td>{{ change.stock.depot.name }}</td>
+                            <td>{{ change.stock.product.name }}</td>
+                            <td class="{% if change.quantity_change > 0 %}text-success{% elif change.quantity_change < 0 %}text-danger{% endif %}">
+                                {% if change.quantity_change > 0 %}+{% endif %}{{ change.quantity_change|floatformat:2 }} MT
+                            </td>
+                            <td>
+                                <span class="badge 
+                                    {% if change.change_type == 'addition' %}bg-success
+                                    {% elif change.change_type == 'sale' %}bg-danger
+                                    {% else %}bg-warning{% endif %}">
+                                    {{ change.get_change_type_display }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">No recent stock changes</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <a href="{% url 'stock_history' %}" class="btn btn-sm btn-outline-primary">View All Stock History</a>
             </div>
-            <!-- Add this to your dashboard.html after the Recent UCF Payments section -->
-<div class="col-md-6">
-    <h4>Recent Stock Changes</h4>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Depot</th>
-                <th>Product</th>
-                <th>Change</th>
-                <th>Type</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for change in recent_stock_changes %}
-            <tr>
-                <td>{{ change.date }}</td>
-                <td>{{ change.stock.depot.name }}</td>
-                <td>{{ change.stock.product.name }}</td>
-                <td class="{% if change.quantity_change > 0 %}text-success{% elif change.quantity_change < 0 %}text-danger{% endif %}">
-                    {% if change.quantity_change > 0 %}+{% endif %}{{ change.quantity_change|floatformat:2 }} MT
-                </td>
-                <td>
-                    <span class="badge 
-                        {% if change.change_type == 'addition' %}bg-success
-                        {% elif change.change_type == 'sale' %}bg-danger
-                        {% else %}bg-warning{% endif %}">
-                        {{ change.get_change_type_display }}
-                    </span>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="5" class="text-center">No recent stock changes</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <a href="{% url 'stock_history' %}" class="btn btn-sm btn-outline-primary">View All Stock History</a>
-</div>
         </div>
     </div>
 </div>
